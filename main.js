@@ -6,7 +6,6 @@
         app = electron.app,
         BrowserWindow = electron.BrowserWindow,
         exec = require('child_process').exec,
-        net = require('net'),
         http = require('http'),
         mainWindow;
 
@@ -28,24 +27,26 @@
                     }
                 });
 
+                /*jslint nomen: true*/
                 mainWindow.loadURL('file://' + __dirname + '/index.html');
+                /*jslint nomen: false*/
 
-                mainWindow.on('closed', function() {
+                mainWindow.on('closed', function () {
                     mainWindow = null;
                     child.kill();
                 });
             },
             connect = function () {
-                http.request('http://localhost:32400/web', function() {
+                http.request('http://localhost:32400/web', function () {
                     openPage();
-                }).on('error', function(err) {
+                }).on('error', function (err) {
                     console.log(err);
-                    setTimeout(function(), {
+                    setTimeout(function () {
                         console.log('doge');
                         connect();
                     });
                 });
-        }
+            };
 
         connect();
     });
