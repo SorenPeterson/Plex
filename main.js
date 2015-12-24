@@ -6,7 +6,7 @@
         app = electron.app,
         BrowserWindow = electron.BrowserWindow,
         exec = require('child_process').exec,
-        http = require('http'),
+        portscanner = require('portscanner'),
         mainWindow;
 
     app.on('window-all-closed', function () {
@@ -16,39 +16,36 @@
     });
 
     app.on('ready', function () {
-        var child = exec('ssh -nNTL 32400:localhost:32400 tv@308jackson.ddns.net'),
-            openPage = function () {
-                mainWindow = new BrowserWindow({
-                    width: 800,
-                    height: 600,
-                    "node-integration": "iframe",
-                    "web-preferences": {
-                        "web-security": false
-                    }
-                });
+        var child = exec('ssh -nNTL 32400:localhost:32400 tv@308jackson.ddns.net');
 
-                /*jslint nomen: true*/
-                mainWindow.loadURL('file://' + __dirname + '/index.html');
-                /*jslint nomen: false*/
+        function openPage() {
+            mainWindow = new BrowserWindow({
+                width: 800,
+                height: 600,
+                "node-integration": "iframe",
+                "web-preferences": {
+                    "web-security": false
+                }
+            });
 
-                mainWindow.on('closed', function () {
-                    mainWindow = null;
-                    child.kill();
-                });
-            },
-            connect = function () {
-                http.request('http://localhost:32400/web', function () {
-                    openPage();
-                }).on('error', function (err) {
-                    console.log(err);
-                    setTimeout(function () {
-                        console.log('doge');
-                        connect();
-                    });
-                });
-            };
+            /*jslint nomen: true*/
+            mainWindow.loadURL('file://' + __dirname + '/index.html');
+            /*jslint nomen: false*/
 
-        connect();
+            mainWindow.on('closed', function () {
+                mainWindow = null;
+                child.kill();
+            });
+        }
+
+        portscanner.checkPortStatus(32400, '127.0.0.1', function (error, status) {
+            if (status === 'open') {
+                openPage();
+            } else {
+                app.quit();
+            }
+            return error;
+        });
     });
 
 }()); // This is the encapsulator
