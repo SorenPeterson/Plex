@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>Hello World!</title>
     <style>
-      * {
+    * {
         margin: 0;
         padding: 0;
         border: none;
-      }
-      iframe {
-        width: 100%;
+    }
+    iframe {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
         height: 100vh;
-      }
+    }
     </style>
-  </head>
-  <body>
-    <iframe src="http://localhost:32400/web"></iframe>
-  </body>
+</head>
+<body>
+    <iframe src="http://localhost:32400/web" scrolling="no"></iframe>
+</body>
 </html>

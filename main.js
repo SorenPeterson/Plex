@@ -38,14 +38,17 @@
             });
         }
 
-        portscanner.checkPortStatus(32400, '127.0.0.1', function (error, status) {
-            if (status === 'open') {
-                openPage();
-            } else {
-                app.quit();
-            }
-            return error;
-        });
+        function connect() {
+            portscanner.checkPortStatus(32400, '127.0.0.1', function (error, status) {
+                if (status === 'open') {
+                    openPage();
+                } else {
+                    connect();
+                }
+                return error;
+            });
+        }
+        connect();
     });
 
 }()); // This is the encapsulator
